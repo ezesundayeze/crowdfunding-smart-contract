@@ -99,24 +99,24 @@ contract CrowdFunding {
 
     function voteForRequest(uint _requestNo) public { 
         require(contributors[msg.sender]> 0, "You must be a contributor");
-        Request  storage thisRequest = requests[_requestNo];
+        Request  storage spendingRequest = requests[_requestNo];
 
-        require(thisRequest.voters[msg.sender] == false, "You have voted already");
-        thisRequest.voters[msg.sender] = true;
-        thisRequest.noOfVoters++;
+        require(spendingRequest.voters[msg.sender] == false, "You have voted already");
+        spendingRequest.voters[msg.sender] = true;
+        spendingRequest.noOfVoters++;
     }
 
 
     function makePayment(uint _requestNo) public onlyAdmin{
         require(raisedAmount >=goal);
-        Request storage thisRequest = requests[_requestNo];
-        require(thisRequest.completed == false, "Request completed");
-        require(thisRequest.noOfVoters> noOfContributors/2);
+        Request storage spendingRequest = requests[_requestNo];
+        require(spendingRequest.completed == false, "Request completed");
+        require(spendingRequest.noOfVoters> noOfContributors/2);
 
-        thisRequest.recipient.transfer(thisRequest.value);
-        thisRequest.completed = true;
+        spendingRequest.recipient.transfer(spendingRequest.value);
+        spendingRequest.completed = true;
 
-        emit MakePaymentEvent(thisRequest.recipient, thisRequest.value);
+        emit MakePaymentEvent(spendingRequest.recipient, spendingRequest.value);
     }
 
     
